@@ -19,7 +19,7 @@ export default function Home() {
         sum += char.charCodeAt(0) - 96; // 'a' -> 1, 'b' -> 2, etc.
       }
     }
-    return sum > 255 ? sum % 255 : sum; // Ensure the sum is within the range 0-255
+    return sum % 255; // Ensure the sum is within the range 0-255
   };
   const handleCalculate = () => {
     setFirstNameSum(convertToSum(firstName));
