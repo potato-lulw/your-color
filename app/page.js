@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ChromePicker, CompactPicker, SketchPicker } from "react-color";
+import { ChromePicker } from "react-color";
 
 export default function Home() {
   const [firstName, setFirstName] = useState("");
@@ -9,6 +9,7 @@ export default function Home() {
   const [firstNameSum, setFirstNameSum] = useState(0);
   const [middleNameSum, setMiddleNameSum] = useState(0);
   const [lastNameSum, setLastNameSum] = useState(0);
+  const [hasInput, setHasInput] = useState(false);
 
   const convertToSum = (name) => {
     let sum = 0;
@@ -20,20 +21,23 @@ export default function Home() {
     }
     return sum > 255 ? sum % 255 : sum; // Ensure the sum is within the range 0-255
   };
-
   const handleCalculate = () => {
     setFirstNameSum(convertToSum(firstName));
     setMiddleNameSum(convertToSum(middleName));
     setLastNameSum(convertToSum(lastName));
+    setHasInput(firstName !== "" || middleName !== "" || lastName !== "")
   };
 
   // RGB color based on name sums
   const rgbColor = `rgb(${firstNameSum}, ${middleNameSum}, ${lastNameSum})`;
 
+  // Condition to check if any input is provided
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-40">
       <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex md:flex-row flex-col gap-2 ">
+        <div className="flex md:flex-row flex-col gap-2">
           <input
             type="text"
             placeholder="First Name"
@@ -64,24 +68,23 @@ export default function Home() {
         </button>
       </div>
 
-      {/* <div className="flex flex-col items-center justify-center mt-8">
-        <p>First Name Sum: {firstNameSum}</p>
-        <p>Middle Name Sum: {middleNameSum}</p>
-        <p>Last Name Sum: {lastNameSum}</p>
-      </div> */}
+      {/* Conditionally render the color box and ChromePicker */}
+      {hasInput ? (
+        <div className="flex gap-2">
+          <div
+            className=" md:w-48 w-36  rounded-lg"
+            style={{ backgroundColor: rgbColor }}
+          ></div>
+          {/* <SketchPicker color={rgbColor} width={300} colors={"#4D4D4D"}/> */}
+          <ChromePicker color={rgbColor} />
+        </div>
+      ) : (
+        <p className="text-center text-3xl font-bold text-gray-600">
+          Discover the color hidden in your name
+        </p>
+      )}
 
-      {/* Display color box */}
-      <div className="flex gap-2">
-
-        <div
-          className=" md:w-48 w-36  rounded-lg"
-          style={{ backgroundColor: rgbColor }}
-        ></div>
-        {/* <SketchPicker color={rgbColor} width={300} colors={"#4D4D4D"}/> */}
-        <ChromePicker color={rgbColor}/>
-      </div>
-
-      <p className="mt-4 text-center">RGB Color: {rgbColor}</p>
+      <p>Code: {rgbColor}</p>
     </main>
   );
 }
